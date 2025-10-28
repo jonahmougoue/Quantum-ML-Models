@@ -1,0 +1,66 @@
+import os
+import pathlib
+import h5py
+import numpy as np
+import torch
+from torch.utils.data import Dataset
+from tqdm.notebook import tqdm
+
+class QuantumDataset(Dataset):
+    def __init__(self, potentials = 'all'):
+        filedir = pathlib.Path('Data/SAMPLE')
+        arg_to_file = {
+            'Harmonic Oscillator': 'HO_gen2_0010.h5',
+            'Infinite Well': 'IW_gen2_0010.h5',
+            'Negative Gaussian': 'NG_gen2b_0000.h5',
+            'Random': 'RND_0011.h5',
+            'Random KE': 'RND_KE_gen2_0010.h5',
+        }
+
+        if not os.path.exists(filedir):
+            print('a')
+            # download samples:
+
+        if potentials == 'all':
+            self.files = os.listdir(filedir)
+        else:
+            self.files = [arg_to_file[potentials]]
+
+        for file in self.files:
+            with h5py.File(filedir / file, 'r') as f:
+                print(file)
+                for col in f:
+                    print(f'{col}: {f[col].shape}')
+            print('')
+
+        calculated_energy = []
+        wavefunction = []
+        potential = []
+        potential_label = []
+
+        for file_id, file in tqdm(enumerate(self.files)):
+            with h5py.File(filedir / file, 'r') as f:
+
+                wavefunction.append(f['wavefunction'][:]) if 'wavefunction' in f else wavefunction.append(f['psi'][:])
+                calculated_energy.append(f['calculated_energy'][:])
+                potential.append(f['potential'][:])
+                potential_label.append([file_id]*len(f['potential'][:]))
+
+        self.calculated_energy = torch.from_numpy(np.concatenate(calculated_energy))
+        self.potential = torch.from_numpy(np.concatenate(potential))
+        self.wavefunction = torch.from_numpy(np.concatenate(wavefunction))
+        self.potential_label = torch.from_numpy(np.concatenate(potential_label))
+
+    def __len__(self):
+        return len(self.calculated_energy)
+
+    def __getitem__(self, idx):
+        return {
+            'potential': self.potential[idx],
+            'wavefunction': self.wavefunction[idx],
+            'energy': self.calculated_energy[idx],
+            'potential_label': self.potential_label[idx],
+        }
+
+    def get_files(self):
+        return self.files
