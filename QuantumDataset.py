@@ -5,10 +5,12 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 from tqdm.notebook import tqdm
+import requests
+import zipfile
 
 class QuantumDataset(Dataset):
     def __init__(self, potentials = 'all'):
-        filedir = pathlib.Path('Data/SAMPLE')
+
         arg_to_file = {
             'Harmonic Oscillator': 'HO_gen2_0010.h5',
             'Infinite Well': 'IW_gen2_0010.h5',
@@ -17,17 +19,45 @@ class QuantumDataset(Dataset):
             'Random KE': 'RND_KE_gen2_0010.h5',
         }
 
-        if not os.path.exists(filedir):
-            print('a')
-            # download samples:
+        data_folder = pathlib.Path('Data')
+        sample_folder = pathlib.Path('SAMPLE')
+        zip_folder = 'SAMPLE.zip'
+        url = 'https://nrc-digital-repository.canada.ca/eng/view/sample/?id=1343ae23-cebf-45c6-94c3-ddebdb2f23c6'
+
+        if not os.path.exists(data_folder / sample_folder):
+            tqdm.write('Dataset not downloaded\n')
+
+            with requests.get(url,stream=True) as r:
+                r.raise_for_status()
+                total_size = int(r.headers.get('content-length', 0))
+                block_size = 1024*64*64
+                #block_size = 64**4
+                if not os.path.exists(data_folder / zip_folder):
+                    with open(data_folder / zip_folder, 'wb') as f:
+                        for data in tqdm(r.iter_content(block_size),
+                                         total=total_size//block_size,
+                                         desc='Downloading Files',
+                                         unit='blocks',
+                                         leave=False,
+                                         ):
+                            f.write(data)
+                        tqdm.write(f'Downloaded {zip_folder} to {data_folder}\n')
+                with zipfile.ZipFile(data_folder / zip_folder, 'r') as f:
+                    for item in tqdm(f.infolist(),
+                                     desc='Extracting Files',
+                                     unit='files',
+                                     leave=False
+                                     ):
+                        f.extract(item, data_folder)
+                    tqdm.write(f'Extracted to {data_folder}\n')
 
         if potentials == 'all':
-            self.files = os.listdir(filedir)
+            self.files = os.listdir(data_folder / sample_folder)
         else:
             self.files = [arg_to_file[potentials]]
 
         for file in self.files:
-            with h5py.File(filedir / file, 'r') as f:
+            with h5py.File(data_folder / sample_folder / file, 'r') as f:
                 print(file)
                 for col in f:
                     print(f'{col}: {f[col].shape}')
@@ -39,7 +69,7 @@ class QuantumDataset(Dataset):
         potential_label = []
 
         for file_id, file in tqdm(enumerate(self.files)):
-            with h5py.File(filedir / file, 'r') as f:
+            with h5py.File(data_folder / sample_folder / file, 'r') as f:
 
                 wavefunction.append(f['wavefunction'][:]) if 'wavefunction' in f else wavefunction.append(f['psi'][:])
                 calculated_energy.append(f['calculated_energy'][:])
