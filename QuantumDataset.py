@@ -10,13 +10,14 @@ import zipfile
 
 class QuantumDataset(Dataset):
     def __init__(self, potentials = 'all'):
+        potentials = potentials.lower()
 
         arg_to_file = {
-            'Harmonic Oscillator': 'HO_gen2_0010.h5',
-            'Infinite Well': 'IW_gen2_0010.h5',
-            'Negative Gaussian': 'NG_gen2b_0000.h5',
-            'Random': 'RND_0011.h5',
-            'Random KE': 'RND_KE_gen2_0010.h5',
+            'harmonic oscillator': 'HO_gen2_0010.h5',
+            'infinite well': 'IW_gen2_0010.h5',
+            'negative gaussian': 'NG_gen2b_0000.h5',
+            'random': 'RND_0011.h5',
+            'random ke': 'RND_KE_gen2_0010.h5',
         }
 
         data_folder = pathlib.Path('Data')
@@ -68,7 +69,7 @@ class QuantumDataset(Dataset):
         potential = []
         potential_label = []
 
-        for file_id, file in tqdm(enumerate(self.files)):
+        for file_id, file in tqdm(enumerate(self.files),total=len(self.files)):
             with h5py.File(data_folder / sample_folder / file, 'r') as f:
 
                 wavefunction.append(f['wavefunction'][:]) if 'wavefunction' in f else wavefunction.append(f['psi'][:])
