@@ -32,7 +32,6 @@ class QuantumDataset(Dataset):
                 r.raise_for_status()
                 total_size = int(r.headers.get('content-length', 0))
                 block_size = 1024*64*64
-                #block_size = 64**4
                 if not os.path.exists(data_folder / zip_folder):
                     with open(data_folder / zip_folder, 'wb') as f:
                         for data in tqdm(r.iter_content(block_size),
@@ -88,7 +87,7 @@ class QuantumDataset(Dataset):
     def __getitem__(self, idx):
         return {
             'potential': self.potential[idx],
-            'wavefunction': self.wavefunction[idx],
+            'wavefunction2': self.wavefunction[idx],
             'energy': self.calculated_energy[idx],
             'potential_label': self.potential_label[idx],
         }
