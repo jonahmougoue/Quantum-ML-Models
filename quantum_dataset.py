@@ -9,7 +9,15 @@ import requests
 import zipfile
 
 class QuantumDataset(Dataset):
-    def __init__(self, potentials = 'all'):
+    def __init__(self, potentials:str='all'):
+        '''
+        Dataset containing 25000 items, each with:\n
+        -1x256x256 potential map\n
+        -1x256x356 wavefunction^2 map\n
+        -Energy of the wavefunction\n
+        -Label for the potential\n
+        :param potentials: Name of potential to use. 'all' selects all potentials in the dataset.
+        '''
         potentials = potentials.lower()
 
         arg_to_file = {
@@ -84,7 +92,7 @@ class QuantumDataset(Dataset):
     def __len__(self):
         return len(self.calculated_energy)
 
-    def __getitem__(self, idx):
+    def __getitem__(self,idx):
         return {
             'potential': self.potential[idx],
             'wavefunction2': self.wavefunction[idx],
@@ -93,4 +101,8 @@ class QuantumDataset(Dataset):
         }
 
     def get_files(self):
+        '''
+        Gets the names of each file being used
+        :return: List of file names
+        '''
         return self.files
