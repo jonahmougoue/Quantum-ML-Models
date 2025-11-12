@@ -16,6 +16,7 @@ class QuantumDataset(Dataset):
         -1x256x356 wavefunction^2 map\n
         -Energy of the wavefunction\n
         -Label for the potential\n
+        Data from https://nrc-digital-repository.canada.ca/eng/view/object/?id=1343ae23-cebf-45c6-94c3-ddebdb2f23c6
         :param potentials: Name of potential to use. 'all' selects all potentials in the dataset.
         '''
         potentials = potentials.lower()
@@ -28,7 +29,7 @@ class QuantumDataset(Dataset):
             'random ke': 'RND_KE_gen2_0010.h5',
         }
 
-        data_folder = pathlib.Path('Data')
+        data_folder = (pathlib.Path(__file__).parent / pathlib.Path('')).resolve()
         sample_folder = pathlib.Path('SAMPLE')
         zip_folder = 'SAMPLE.zip'
         url = 'https://nrc-digital-repository.canada.ca/eng/view/sample/?id=1343ae23-cebf-45c6-94c3-ddebdb2f23c6'
@@ -46,16 +47,14 @@ class QuantumDataset(Dataset):
                                          total=total_size//block_size,
                                          desc='Downloading Files',
                                          unit='blocks',
-                                         leave=False,
-                                         ):
+                                         leave=False):
                             f.write(data)
                         tqdm.write(f'Downloaded {zip_folder} to {data_folder}\n')
                 with zipfile.ZipFile(data_folder / zip_folder, 'r') as f:
                     for item in tqdm(f.infolist(),
                                      desc='Extracting Files',
                                      unit='files',
-                                     leave=False
-                                     ):
+                                     leave=False):
                         f.extract(item, data_folder)
                     tqdm.write(f'Extracted to {data_folder}\n')
 
