@@ -9,7 +9,7 @@ import requests
 import zipfile
 
 class QuantumDataset(Dataset):
-    def __init__(self, potentials:str='all'):
+    def __init__(self, potentials:str='all',memory=False):
         '''
         Dataset containing 25000 items, each with:\n
         -1x256x256 potential map\n
@@ -18,7 +18,9 @@ class QuantumDataset(Dataset):
         -Label for the potential\n
         Data from https://nrc-digital-repository.canada.ca/eng/view/object/?id=1343ae23-cebf-45c6-94c3-ddebdb2f23c6
         :param potentials: Name of potential to use. 'all' selects all potentials in the dataset.
+        :param memory: Whether to load data on memory or not.
         '''
+        self.memory = memory
         potentials = potentials.lower()
 
         arg_to_file = {
@@ -30,11 +32,11 @@ class QuantumDataset(Dataset):
         }
 
         data_folder = (pathlib.Path(__file__).parent / pathlib.Path('')).resolve()
-        sample_folder = pathlib.Path('SAMPLE')
+        self.sample_folder = pathlib.Path('SAMPLE')
         zip_folder = 'SAMPLE.zip'
         url = 'https://nrc-digital-repository.canada.ca/eng/view/sample/?id=1343ae23-cebf-45c6-94c3-ddebdb2f23c6'
 
-        if not os.path.exists(data_folder / sample_folder):
+        if not os.path.exists(data_folder / self.sample_folder):
             tqdm.write('Dataset not downloaded\n')
 
             with requests.get(url,stream=True) as r:
@@ -59,44 +61,77 @@ class QuantumDataset(Dataset):
                     tqdm.write(f'Extracted to {data_folder}\n')
 
         if potentials == 'all':
-            self.files = os.listdir(data_folder / sample_folder)
+            self.files = os.listdir(data_folder / self.sample_folder)
         else:
             self.files = [arg_to_file[potentials]]
 
         for file in self.files:
-            with h5py.File(data_folder / sample_folder / file, 'r') as f:
+            with h5py.File(data_folder / self.sample_folder / file, 'r') as f:
                 print(file)
                 for col in f:
                     print(f'{col}: {f[col].shape}')
             print('')
 
-        calculated_energy = []
-        wavefunction = []
-        potential = []
-        potential_label = []
+        self.index_map = []
+        for file_id, file in enumerate(tqdm(self.files, desc="Indexing")):
+            with h5py.File(data_folder / self.sample_folder / file, 'r') as f:
+                length = len(f['potential'])
+                self.index_map += [(file_id, i) for i in range(length)]
 
-        for file_id, file in tqdm(enumerate(self.files),total=len(self.files)):
-            with h5py.File(data_folder / sample_folder / file, 'r') as f:
+        if self.memory:
+            tqdm.write("Loading all data into memory... (this may take a few minutes)")
+            all_potentials, all_wavefunctions, all_energies, all_labels = [], [], [], []
 
-                wavefunction.append(f['wavefunction'][:]) if 'wavefunction' in f else wavefunction.append(f['psi'][:])
-                calculated_energy.append(f['calculated_energy'][:])
-                potential.append(f['potential'][:])
-                potential_label.append([file_id]*len(f['potential'][:]))
+            for file_id, file in enumerate(tqdm(self.files, desc="Loading files to memory")):
+                with h5py.File(data_folder / self.sample_folder / file, 'r') as f:
+                    potentials = torch.from_numpy(f['potential'][:]).float()
+                    wavefunctions = torch.from_numpy(
+                        f['wavefunction'][:] if 'wavefunction' in f else f['psi'][:]
+                    ).float()
+                    energies = torch.from_numpy(f['calculated_energy'][:]).float()
+                    labels = torch.full((len(potentials),), file_id, dtype=torch.long)
 
-        self.calculated_energy = torch.from_numpy(np.concatenate(calculated_energy))
-        self.potential = torch.from_numpy(np.concatenate(potential))
-        self.wavefunction = torch.from_numpy(np.concatenate(wavefunction))
-        self.potential_label = torch.from_numpy(np.concatenate(potential_label))
+                all_potentials.append(potentials)
+                all_wavefunctions.append(wavefunctions)
+                all_energies.append(energies)
+                all_labels.append(labels)
+
+            self.potential = torch.cat(all_potentials)
+            self.wavefunction2 = torch.cat(all_wavefunctions)
+            self.energy = torch.cat(all_energies)
+            self.potential_label = torch.cat(all_labels)
+
+            del all_potentials, all_wavefunctions, all_energies, all_labels
+
+        self.data_folder = data_folder
 
     def __len__(self):
-        return len(self.calculated_energy)
+        return len(self.index_map)
 
-    def __getitem__(self,idx):
-        return {
-            'potential': self.potential[idx],
-            'wavefunction2': self.wavefunction[idx],
-            'energy': self.calculated_energy[idx],
-            'potential_label': self.potential_label[idx],
+    def __getitem__(self, idx):
+
+        if self.memory:
+            return {'potential': self.potential[idx],
+                    'wavefunction2': self.wavefunction2[idx],
+                    'energy': self.energy[idx],
+                    'potential_label': self.potential_label[idx],
+            }
+
+        file_id, local_idx = self.index_map[idx]
+        file_path = self.data_folder /self.sample_folder/ self.files[file_id]
+
+        with h5py.File(file_path, 'r') as f:
+            potential = torch.from_numpy(f['potential'][local_idx])
+            if 'wavefunction' in f.keys():
+                wavefunction2 = torch.from_numpy(f['wavefunction'][local_idx])
+            else:
+                wavefunction2 = torch.from_numpy(f['psi'][local_idx])
+            energy = torch.tensor(f['calculated_energy'][local_idx])
+
+        return {'potential': potential,
+                'wavefunction2': wavefunction2,
+                'energy': energy,
+                'potential_label': file_id,
         }
 
     def get_files(self):
