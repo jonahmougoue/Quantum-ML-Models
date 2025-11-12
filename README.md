@@ -20,6 +20,7 @@ Mills, Kyle, Michael Spanner, and Isaac Tamblyn. ‘Deep Learning and the Schrö
 Data was sourced from the National Research Council of Canada:
 https://nrc-digital-repository.canada.ca/eng/view/object/?id=1343ae23-cebf-45c6-94c3-ddebdb2f23c6
 	
+Licenses:
 Open Government Licence - Canada (National Research Council of Canada)
 https://open.canada.ca/en/open-government-licence-canada
 Creative Commons, Attribution 2.0 Generic (CC BY 2.0) (University of Ontario Institute of Technology)
