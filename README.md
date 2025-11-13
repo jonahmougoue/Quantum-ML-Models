@@ -6,15 +6,18 @@ This project seeks to extend their method from predicting energy from 256x256 po
 ## Part 1
 A CNN model is created to take a 256x256 potential map as input and output the predicted ground-state energy of the wavefunction.
 This model is based off the model produced in 'Deep Learning and the Schrödinger Equation'
+### Results
+
 ## Part 2
 A UNet Model is create to take a 256x256 potential map as input and output a 256x256 ground-state map for the predicted wavefunction.
 A custom loss function is used to measure the difference in energy of the predicted wavefunction compared to the true energy.
+### Results
 
 ## Conclusion
 
 ## Appendix
 
-### Calculating dx:
+### Calculating dx
 The distance between each pixel in the potential and wavefunction images is not given by the dataset, but is required for EnergyLoss to calculate the correct energies. find_dx.ipynb iterates over multiple values of dx to find the value that minimizes the differences in the true energy of the wavefunction and the calculated energy.
 
 ## Credit
