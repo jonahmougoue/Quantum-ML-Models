@@ -3,17 +3,17 @@ from torch import nn
 from torch import Tensor
 class WavefunctionUNet(nn.Module):
     def __init__(self,channels:list=None):
-        '''
+        """
         UNET model designed to predict wavefunctions given their potentials
         :param channels: List containing number of channels per layer
-        '''
+        """
         super().__init__()
         self.start = nn.Sequential(nn.Conv2d(in_channels=1,out_channels=channels[0],kernel_size=3,padding=1,padding_mode='reflect'),
                                    nn.ReLU(),
                                    nn.Conv2d(in_channels=channels[0],out_channels=channels[0],kernel_size=3,padding=1,padding_mode='reflect'),
                                    nn.ReLU())
         self.end = nn.Sequential(nn.Conv2d(in_channels=channels[0],out_channels=1,kernel_size=3,padding=1,padding_mode='reflect'),
-                                 nn.Tanh(),
+                                 nn.Tanh()
                                  )
         self.encoders = nn.ModuleList()
         self.decoders = nn.ModuleList()
@@ -31,11 +31,12 @@ class WavefunctionUNet(nn.Module):
         )
 
     def forward(self,X:Tensor)->Tensor:
-        '''
-        Predicts wavefunction using potential energy
+        """
+        Predicts normalized wavefunction using potential energy.
+        Wavefunction is normalized such that ∫|Ψ|^2 = 1
         :param X: Potential Image
         :return: Wavefunction Prediction
-        '''
+        """
 
         X = self.start(X)
         encoded_levels = []
@@ -51,12 +52,12 @@ class WavefunctionUNet(nn.Module):
         return X
 
     def make_encoder(self,input_size:int,output_size:int)->nn.Sequential:
-        '''
+        """
         Creates encoding layer of UNET
         :param input_size: Number of input channels
         :param output_size: Number of output channels
         :return: Encoding Layer
-        '''
+        """
         return nn.Sequential(nn.MaxPool2d(kernel_size=2,stride=2),
                              nn.Conv2d(in_channels=input_size,out_channels=output_size,kernel_size=3,padding=1,padding_mode='reflect'),
                              nn.ReLU(),
@@ -64,13 +65,13 @@ class WavefunctionUNet(nn.Module):
                              nn.ReLU())
 
     def make_decoder(self,input_size:int,output_size:int,skip_size:int)->nn.ModuleDict:
-        '''
+        """
         Creates decoding layer of UNET
         :param input_size: Number of input channels
         :param output_size: Number of output channels
         :param skip_size: Number of skip connections
         :return: Decoding Layer
-        '''
+        """
         return nn.ModuleDict({'decode':nn.Sequential(nn.Upsample(scale_factor=2,mode='bilinear'),
                                                      nn.Conv2d(in_channels=input_size,out_channels=output_size,kernel_size=3,padding=1,padding_mode='reflect'),
                                                      nn.ReLU()),

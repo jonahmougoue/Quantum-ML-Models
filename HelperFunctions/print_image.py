@@ -10,7 +10,7 @@ def print_img(image1:Tensor,
               files:list=None,
               energy_pred:Tensor=None,
               energy_diff:bool=False)->None:
-    '''
+    """
     Function for Plotting Images
     :param image1: 256x256 map of potential or wavefunction
     :param image2: 256x256 map of potential or wavefunction
@@ -18,11 +18,11 @@ def print_img(image1:Tensor,
     :param title2: Title of the second image
     :param energy: Energy of wavefunction
     :param potential_label: Label of potential
-    :param files: List of potential files, required if potential_label is True
+    :param files: List of potential files, required if potential_label is not None
     :param energy_pred: Predicted energy from the model
     :param energy_diff: True to display the difference in energy and energy_pred
     :return: None
-    '''
+    """
     fig, ax = plt.subplots(1,2,figsize=(10,5))
     cmap = 'viridis'
 
@@ -47,7 +47,7 @@ def print_img(image1:Tensor,
             ax[1].set_xlabel(rf'$E_{{True}} = {energy.item():.2f}$'+'\n'+rf'$E_{{Calc}} = {energy_pred.item():.2f}$')
         else:
             energy_pred = energy_pred.cpu()
-            ax[1].set_xlabel(rf'$E_{{Calc}} = {energy_pred.item():.2f}$'+'\n'+rf'$\Delta E = {torch.abs(energy-energy_pred).item():.4e}$')
+            ax[1].set_xlabel(rf'$E_{{Calc}} = {energy_pred.item():.2f}$'+'\n'+rf'$\Delta E = |E_{{True}} - E_{{Calc}}| = {torch.abs(energy-energy_pred).item():.4e}$')
 
     ax[1].tick_params(labelbottom=False,labelleft=False)
 

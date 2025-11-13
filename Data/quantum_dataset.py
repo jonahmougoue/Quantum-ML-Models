@@ -10,16 +10,17 @@ import zipfile
 
 class QuantumDataset(Dataset):
     def __init__(self, potentials:str='all',memory=False):
-        '''
-        Dataset containing 25000 items, each with:\n
+        """
+        Dataset containing 25,000 samples, each with:\n
         -1x256x256 potential map\n
-        -1x256x356 wavefunction^2 map\n
-        -Energy of the wavefunction\n
-        -Label for the potential\n
-        Data from https://nrc-digital-repository.canada.ca/eng/view/object/?id=1343ae23-cebf-45c6-94c3-ddebdb2f23c6
-        :param potentials: Name of potential to use. 'all' selects all potentials in the dataset.
-        :param memory: Whether to load data on memory or not.
-        '''
+        -1x256x256 wavefunction^2 map\n
+        -Wavefunction energy\n
+        -Label identifying potential type\n
+        Data sourced from: https://nrc-digital-repository.canada.ca/eng/view/object/?id=1343ae23-cebf-45c6-94c3-ddebdb2f23c6
+        :param potentials: Name of potential to use. Options include
+            ['harmonic oscillator','infinite well','negative gaussian','random','random ke','all']
+        :param memory: If True, loads data on memory.
+        """
         self.memory = memory
         potentials = potentials.lower()
 
@@ -79,7 +80,7 @@ class QuantumDataset(Dataset):
                 self.index_map += [(file_id, i) for i in range(length)]
 
         if self.memory:
-            tqdm.write("Loading all data into memory... (this may take a few minutes)")
+            tqdm.write("Loading data into memory")
             all_potentials, all_wavefunctions, all_energies, all_labels = [], [], [], []
 
             for file_id, file in enumerate(tqdm(self.files, desc="Loading files to memory")):
@@ -106,10 +107,18 @@ class QuantumDataset(Dataset):
         self.data_folder = data_folder
 
     def __len__(self):
+        """
+        Returns the total numbers of samples of the dataset
+        :return: Length of dataset
+        """
         return len(self.index_map)
 
     def __getitem__(self, idx):
-
+        """
+        Returns single sample from the dataset.
+        :param idx:  Index of the sample
+        :return: Dict containing properties of the sample
+        """
         if self.memory:
             return {'potential': self.potential[idx],
                     'wavefunction2': self.wavefunction2[idx],
@@ -135,8 +144,8 @@ class QuantumDataset(Dataset):
         }
 
     def get_files(self):
-        '''
+        """
         Gets the names of each file being used
         :return: List of file names
-        '''
+        """
         return self.files
