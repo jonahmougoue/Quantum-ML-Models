@@ -48,7 +48,7 @@ class WavefunctionUNet(nn.Module):
             X = self.decoders[i]['decode'](X)
             X = self.decoders[i]['convolution'](torch.cat((X, encoded_levels[i]), dim=1))
         X = self.end(X)
-        X = X * torch.sqrt(1/(X**2).sum(dim=(1,2,3),keepdim=True)) #normalization
+        X = X * torch.sqrt(1/(X**2).sum(dim=(1,2,3),keepdim=True) + 1e-8) #normalization with offset to avoid dividing by 0
         return X
 
     def make_encoder(self,input_size:int,output_size:int)->nn.Sequential:
