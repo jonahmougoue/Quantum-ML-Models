@@ -47,7 +47,7 @@ def print_img(image1:Tensor,
             ax[1].set_xlabel(rf'$E_{{True}} = {energy.item():.2f}$'+'\n'+rf'$E_{{Calc}} = {energy_pred.item():.2f}$')
         else:
             energy_pred = energy_pred.cpu()
-            ax[1].set_xlabel(rf'$E_{{Calc}} = {energy_pred.item():.2f}$'+'\n'+rf'$\Delta E = |E_{{True}} - E_{{Calc}}| = {torch.abs(energy-energy_pred).item():.4e}$')
+            ax[1].set_xlabel(rf'$E_{{True}} = {energy.item():.2f}$'+'\n'+rf'$E_{{Calc}} = {energy_pred.item():.2f}$'+'\n'+rf'$\Delta E = |E_{{True}} - E_{{Calc}}| = {torch.abs(energy-energy_pred).item():.4e}$')
 
     ax[1].tick_params(labelbottom=False,labelleft=False)
 
