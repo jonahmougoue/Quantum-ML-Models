@@ -11,13 +11,14 @@ class EnergyCNN(nn.Module):
         :param hidden_layers: Tuple containing ints describing output for each hidden layer
         """
         super().__init__()
-
+        stride = 2
+        padding = 1
         cnn_layers = []
         if cnn_channels:
-            cnn_layers.append(nn.Conv2d(1,cnn_channels[0][0],cnn_channels[0][1],stride=cnn_channels[0][2],padding=cnn_channels[0][3], padding_mode='replicate'))
+            cnn_layers.append(nn.Conv2d(1,cnn_channels[0],3,stride=stride,padding=padding, padding_mode='replicate'))
             cnn_layers.append(nn.ReLU())
             for i in range(len(cnn_channels)-1):
-                cnn_layers.append(nn.Conv2d(cnn_channels[i][0],cnn_channels[i+1][0],cnn_channels[i+1][1],stride=cnn_channels[i+1][2],padding=cnn_channels[i+1][3], padding_mode='replicate'))
+                cnn_layers.append(nn.Conv2d(cnn_channels[i],cnn_channels[i+1],3,stride=stride,padding=padding, padding_mode='replicate'))
                 cnn_layers.append(nn.ReLU())
 
         self.cnn_stack = nn.Sequential(*cnn_layers)
