@@ -3,7 +3,7 @@ from torch import nn
 from torch import Tensor
 
 class EnergyLoss(nn.Module):
-    def __init__(self,alpha:float=1.,gamma:float=0.,dx:float=0.157,loss_fn:nn.Module=nn.L1Loss(reduction='mean')):
+    def __init__(self,alpha:float=1.,gamma:float=0.,dx:float=0.15625,loss_fn:nn.Module=nn.L1Loss(reduction='mean')):
         """
         Loss function for calculating the difference in energy between true energy and energy predicted from a wavefunction\n
         Calculates energy using the time-independent schrodinger equation:\n
