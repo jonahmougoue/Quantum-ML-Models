@@ -8,6 +8,8 @@ from tqdm.notebook import tqdm
 import requests
 import zipfile
 
+
+
 class QuantumDataset(Dataset):
     def __init__(self, potentials:str='all',memory=False):
         """
@@ -22,14 +24,22 @@ class QuantumDataset(Dataset):
         :param memory: If True, loads data on memory.
         """
         self.memory = memory
+
         potentials = potentials.lower()
 
-        arg_to_file = {
+        label_to_file = {
             'harmonic oscillator': 'HO_gen2_0010.h5',
             'infinite well': 'IW_gen2_0010.h5',
             'negative gaussian': 'NG_gen2b_0000.h5',
             'random': 'RND_0011.h5',
             'random ke': 'RND_KE_gen2_0010.h5',
+        }
+        file_to_label = {
+            'HO_gen2_0010.h5':'Harmonic Oscillator',
+            'IW_gen2_0010.h5':'Infinite Well',
+            'NG_gen2b_0000.h5':'Negative Gaussian',
+            'RND_0011.h5':'Random Potential',
+            'RND_KE_gen2_0010.h5':'Random Potential with Kinetic Energy',
         }
 
         data_folder = (pathlib.Path(__file__).parent / pathlib.Path('')).resolve()
@@ -64,7 +74,11 @@ class QuantumDataset(Dataset):
         if potentials == 'all':
             self.files = os.listdir(data_folder / self.sample_folder)
         else:
-            self.files = [arg_to_file[potentials]]
+            self.files = [label_to_file[potentials]]
+
+        self.potential_labels = {}
+        for i, file in enumerate(self.files):
+            self.potential_labels[i] = file_to_label[file]
 
         for file in self.files:
             with h5py.File(data_folder / self.sample_folder / file, 'r') as f:
@@ -143,9 +157,10 @@ class QuantumDataset(Dataset):
                 'potential_label': file_id,
         }
 
-    def get_files(self):
+    def get_labels(self):
         """
         Gets the names of each file being used
-        :return: List of file names
+        :return: Dict of potential labels
         """
-        return self.files
+
+        return self.potential_labels

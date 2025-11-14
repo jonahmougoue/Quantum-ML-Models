@@ -7,7 +7,6 @@ def print_img(image1:Tensor,
               title2:str=None,
               energy:Tensor=None,
               potential_label:int=None,
-              files:list=None,
               energy_pred:Tensor=None,
               energy_diff:bool=False)->None:
     """
@@ -31,7 +30,7 @@ def print_img(image1:Tensor,
     ax[0].set_title(title1)
     ax[0].axis('image')
     if potential_label is not None:
-        ax[0].set_xlabel(files[potential_label])
+        ax[0].set_xlabel(potential_label)
     ax[0].tick_params(labelbottom=False,labelleft=False)
 
     img = ax[1].imshow(image2.permute(1,2,0).cpu().numpy(),cmap=cmap)
