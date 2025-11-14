@@ -1,15 +1,21 @@
 # Deep Learning Methods for Calculating the Quantum Wavefunction
-The goal of this project is to create a deep learning model that can predict the energy and wavefunction for a quantum particle in a potential well.
-In 'Deep Learning and the Schrödinger Equation', the authors create a CNN model to calculate the energy of quantum wavefunctions using solely 256x256 maps of their potentials.
-This project seeks to extend their method from predicting energy from 256x256 potential maps to predicting 256x256 wavefunction maps from potential maps and using numerical methods the wavefunction's energy.
+The goal of this project is to create deep learning models that can predict the ground-state energy and wavefunction of a quantum particle in an arbitrary potential.
+
+In 'Deep Learning and the Schrödinger Equation' (Mills, Spanner, and Tamblyn), a Convolutional Neural Network (CNN) is used to calculate the ground-state energies using a discretized potential grid, bypassing the need to calculate the wavefunctions first.
+
+This project extends their idea by using discretized potential grids to first predict the wavefunction and then numerically solving for the predicted energy.
+
+This project is trained using an 8.51 GB sample of the 700.36 GB 'Quantum simulations of an electron in a two dimensional potential well' dataset from the National Research Council of Canada. The data was generated using a numerical simulation of an electron in multiple 256x256 discretized potential grids.
+
+Each sample contains the potential, wavefunction, and energy.
 
 ## Part 1
-A CNN model is created to take a 256x256 potential map as input and output the predicted ground-state energy of the wavefunction.
-This model is based off the model produced in 'Deep Learning and the Schrödinger Equation'
+A CNN is trained to take a potential grid as input and output the predicted ground-state energy.
+The architecture of this model is based off the model used in 'Deep Learning and the Schrödinger Equation'
 ### Results
 
 ## Part 2
-A UNet Model is create to take a 256x256 potential map as input and output a 256x256 ground-state map for the predicted wavefunction.
+A U-Net Model is create to take a potential grid as input and output the ground-state wavefunction.
 A custom loss function is used to measure the difference in energy of the predicted wavefunction compared to the true energy.
 ### Results
 
@@ -17,15 +23,38 @@ A custom loss function is used to measure the difference in energy of the predic
 
 ## Appendix
 
-### Calculating dx
-The distance between each pixel in the potential and wavefunction images is not given by the dataset, but is required for EnergyLoss to calculate the correct energies. find_dx.ipynb iterates over multiple values of dx to find the value that minimizes the differences in the true energy of the wavefunction and the calculated energy.
+### Units
+Length is measured in atomic units. 
+
+Atomic units are used such that ℏ and m equal 1.
+
+Potential and energy are both measured in Hartrees. 
+
+Energy differences are expressed in millihartrees.
+
+### Notation
+V: Potential
+
+Ψ: Wavefunction
+
+E_True: Energy of the wavefunction as specified in the dataset
+
+E_Calc: Energy of the wavefunction as calculated by the model
+
+
+### dx
+The dataset specifies that the potentials are defined ona grid from x,y = -20 to 20 a.u. on a 256x256 grid.
+
+Therefore, dx = 40/256 = 0.15625.
+
+This value is required to numerically calculate the correct energies and can vary by dataset.
 
 ## Credit
 This research project is based on the publication:
 
 Mills, Kyle, Michael Spanner, and Isaac Tamblyn. ‘Deep Learning and the Schrödinger Equation’. Physical Review A 96, no. 4 (18 October 2017). https://doi.org/10.1103/physreva.96.042113.
 
-Data was sourced from the National Research Council of Canada:
+Data sourced from the National Research Council of Canada:
 https://nrc-digital-repository.canada.ca/eng/view/object/?id=1343ae23-cebf-45c6-94c3-ddebdb2f23c6
 	
 ### Licenses:
