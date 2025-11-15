@@ -43,10 +43,10 @@ def print_img(image1:Tensor,
             ax[1].set_xlabel(rf'$E_{{True}} = {energy.item():.4f}$ Ha')
         elif not energy_diff:
             energy_pred = energy_pred.cpu()
-            ax[1].set_xlabel(rf'$E_{{True}} = {energy.item():.4f}$ Ha'+'\n'+rf'$E_{{Calc}} = {energy_pred.item():.4f}$ Ha')
+            ax[1].set_xlabel(rf'$E_{{True}} = {energy.item():.4f}$ Ha'+'\n'+rf'$E_{{Pred}} = {energy_pred.item():.4f}$ Ha')
         else:
             energy_pred = energy_pred.cpu()
-            ax[1].set_xlabel(rf'$E_{{True}} = {energy.item():.4f}$ Ha'+'\n'+rf'$E_{{Calc}} = {energy_pred.item():.4f}$ Ha'
+            ax[1].set_xlabel(rf'$E_{{True}} = {energy.item():.4f}$ Ha'+'\n'+rf'$E_{{Pred}} = {energy_pred.item():.4f}$ Ha'
                              +'\n'+rf'$|\Delta E| = {torch.abs(energy-energy_pred).item()*(10**3):.4e}$ mHa')
 
     ax[1].tick_params(labelbottom=False,labelleft=False)
