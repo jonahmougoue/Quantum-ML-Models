@@ -1,5 +1,5 @@
 # Deep Learning Methods for Calculating the Quantum Wavefunction
-The goal of this project is to create deep learning models that can predict the ground-state energy and wavefunction of a quantum particle in an arbitrary potential.
+The goal of this project is to create deep learning models that can solve the Schrödinger equation in two dimensions.
 
 In 'Deep Learning and the Schrödinger Equation' (Mills, Spanner, and Tamblyn), a Convolutional Neural Network (CNN) is used to calculate the ground-state energies using a discretized potential grid, bypassing the need to calculate the wavefunctions first.
 
@@ -13,11 +13,13 @@ Each sample contains the potential, wavefunction, and energy.
 A CNN is trained to take a potential grid as input and output the predicted ground-state energy.
 The architecture of this model is based off the model used in 'Deep Learning and the Schrödinger Equation'
 ### Results
+In energy prediction, the model achieved a mean absolute error of 1.80 mHa, larger than the median absolute error of 1.49 mHa found in 'Deep Learning and the Schrödinger Equation'.
 
 ## Part 2
 A U-Net Model is create to take a potential grid as input and output the ground-state wavefunction.
 A custom loss function is used to measure the difference in energy of the predicted wavefunction compared to the true energy.
 ### Results
+In wavefunction construction, the U-Net achieved a mean absolute error of 0.173, while in energy prediction, the U-Net achieved a mean absolute error of 1.41mHa with R^2 = 0.999 over 100 epochs.
 
 ## Conclusion
 
@@ -39,7 +41,7 @@ V: Potential
 
 E_True: Energy of the wavefunction as specified in the dataset
 
-E_Calc: Energy of the wavefunction as calculated by the model
+E_Pred: Energy of the wavefunction as calculated by the model
 
 
 ### dx
