@@ -79,13 +79,14 @@ class QuantumDataset(Dataset):
         for i, file in enumerate(self.files):
             self.potential_labels[i] = file_to_label[file]
 
+        '''
         for file in self.files:
             with h5py.File(data_folder / self.sample_folder / file, 'r') as f:
                 print(file)
                 for col in f:
                     print(f'{col}: {f[col].shape}')
             print('')
-
+        '''
         self.index_map = []
         for file_id, file in enumerate(tqdm(self.files, desc="Indexing")):
             with h5py.File(data_folder / self.sample_folder / file, 'r') as f:

@@ -7,7 +7,7 @@ def plot_energy(E_pred:list,E_true:list,file_labels:list,potential_indices:list)
     '''
     :param E_pred: Predicted Energy from model
     :param E_true: True energies
-    :param file_labels: Labels
+    :param file_labels: File names
     :param potential_indices: Index of each potential
     :return:
     '''
@@ -21,7 +21,7 @@ def plot_energy(E_pred:list,E_true:list,file_labels:list,potential_indices:list)
 
     fig, axes = plt.subplots(3, 2, figsize=(18, 27))
 
-    axes = axes.flatten()  # flatten to 1D list of axes
+    axes = axes.flatten()
 
     line = np.linspace(0, max(max(E_true), max(E_pred)), 2)
     axes[0].plot(line, line, label='Perfect Prediction',color='black')

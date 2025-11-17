@@ -19,7 +19,6 @@ def print_img(image1:Tensor,
     :param suptitle: Title of the entire plot
     :param energy: Energy of wavefunction
     :param potential_label: Label of potential
-    :param files: List of potential files, required if potential_label is not None
     :param energy_pred: Predicted energy from the model
     :param energy_diff: True to display the difference in energy and energy_pred
     :return: None
