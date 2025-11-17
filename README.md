@@ -16,7 +16,7 @@ The architecture of this model is based off the model used in 'Deep Learning and
 In energy prediction, the model achieved a median absolute error of 1.80 mHa with R^2 of 0.9965, larger than the median absolute error of 1.49 mHa found in 'Deep Learning and the Schrödinger Equation'.
 
 ## Part 2
-A U-Net Model is create to take a potential grid as input and output the ground-state wavefunction.
+A U-Net model is create to take a potential grid as input and output the ground-state wavefunction.
 A custom loss function is used to measure the difference in energy of the predicted wavefunction compared to the true energy.
 ### Results
 In wavefunction construction, the U-Net achieved a mean absolute error of 0.173, while in energy prediction, the U-Net achieved a median absolute error of 0.77 mHa with R^2 = 0.9998 over 100 epochs, lower than the median absolute error of 1.49 mHa found in 'Deep Learning and the Schrödinger Equation'.
