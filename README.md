@@ -1,29 +1,32 @@
 # Deep Learning Methods for Solving the Schrödinger Equation
 The goal of this project is to create deep learning models that can solve the Schrödinger equation in two dimensions.
 
-In 'Deep Learning and the Schrödinger Equation' (Mills, Spanner, and Tamblyn), a Convolutional Neural Network (CNN) is used to calculate the ground-state energies using a discretized potential grid, bypassing the need to calculate the wavefunctions first.
+In 'Deep Learning and the Schrödinger Equation' (Mills, Spanner, and Tamblyn), a Convolutional Neural Network (CNN) is trained to predict ground-state directly using a discretized potential grid, bypassing the need to calculate the wavefunction.
 
-This project extends their idea by using discretized potential grids to first predict the wavefunction and then numerically solving for the predicted energy.
+This project extends their idea by creating a model that uses discretized potential grids to first predict the wavefunction and then numerically solves for the predicted energy.
 
-This project is trained using an 8.51 GB sample of the 700.36 GB 'Quantum simulations of an electron in a two dimensional potential well' dataset from the National Research Council of Canada. The data was generated using a numerical simulation of an electron in multiple 256x256 discretized potential grids.
+This dataset used is the 8.51 GB sample of the 700.36 GB 'Quantum simulations of an electron in a two dimensional potential well' dataset from the National Research Council of Canada. The data was generated using a numerical simulation of an electron in multiple 256x256 discretized potential grids.
 
 Each sample contains the potential, wavefunction, and energy.
 
 ## Part 1
-A CNN is trained to take a potential grid as input and output the predicted ground-state energy.
+A CNN is trained to map the potential grid to ground-state energy.
 The architecture of this model is based off the model used in 'Deep Learning and the Schrödinger Equation'
 ### Results
-In energy prediction, the model achieved a median absolute error of 1.80 mHa with R^2 of 0.9965, larger than the median absolute error of 1.49 mHa found in 'Deep Learning and the Schrödinger Equation'.
+The CNN achieved a median absolute error of 1.54 mHa with R^2 of 0.9985, larger than the median absolute error of 1.49 mHa found in 'Deep Learning and the Schrödinger Equation'.
 
 ## Part 2
-A U-Net model is create to take a potential grid as input and output the ground-state wavefunction.
-A custom loss function is used to measure the difference in energy of the predicted wavefunction compared to the true energy.
+A U-Net model is create to map the potential grid to the ground-state wavefunction.
+The predicted energy is then calculated using numerical approximation for the wavefunction's ground-state energy.
+A custom loss function optimizes energy differences as opposed to predicted wavefunction differences.
 ### Results
-In wavefunction construction, the U-Net achieved a mean absolute error of 0.173, while in energy prediction, the U-Net achieved a median absolute error of 0.77 mHa with R^2 = 0.9998 over 100 epochs, lower than the median absolute error of 1.49 mHa found in 'Deep Learning and the Schrödinger Equation'.
+In energy prediction, the U-Net achieved a median absolute error of 0.88 mHa with R^2 = 0.9997 over 10 epochs, lower than the median absolute error of 1.49 mHa found in 'Deep Learning and the Schrödinger Equation'.
 
 ## Conclusion
-By predicting the wavefunction and numerically calculating the energy, the U-Net was able to outperform models that directly predict energy.
-
+Predicting the wavefunction and numerically calculating the energy proved more accurate than directly calculating the energy.
+Both models perform under the threshold for chemical accuracy (1.6 mHa).
+These results indicate that learning the wavefunction and calculating the energy can outperform directly predicting the energy.
+The custom loss function for the U-Net causes the model to produce wavefunctions that produce the correct energy, and thus make wavefunctions that satisfy the Shrödinger equation.
 ## Appendix
 
 ### Units
