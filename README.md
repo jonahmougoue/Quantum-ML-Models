@@ -13,15 +13,16 @@ Each sample contains the potential, wavefunction, and energy.
 A CNN is trained to take a potential grid as input and output the predicted ground-state energy.
 The architecture of this model is based off the model used in 'Deep Learning and the Schrödinger Equation'
 ### Results
-In energy prediction, the model achieved a median absolute error of 1.80 mHa, larger than the median absolute error of 1.49 mHa found in 'Deep Learning and the Schrödinger Equation'.
+In energy prediction, the model achieved a median absolute error of 1.80 mHa with R^2 of 0.9965, larger than the median absolute error of 1.49 mHa found in 'Deep Learning and the Schrödinger Equation'.
 
 ## Part 2
 A U-Net Model is create to take a potential grid as input and output the ground-state wavefunction.
 A custom loss function is used to measure the difference in energy of the predicted wavefunction compared to the true energy.
 ### Results
-In wavefunction construction, the U-Net achieved a mean absolute error of 0.173, while in energy prediction, the U-Net achieved a mean absolute error of 1.41mHa with R^2 = 0.999 over 100 epochs.
+In wavefunction construction, the U-Net achieved a mean absolute error of 0.173, while in energy prediction, the U-Net achieved a median absolute error of 0.77 mHa with R^2 = 0.9998 over 100 epochs, lower than the median absolute error of 1.49 mHa found in 'Deep Learning and the Schrödinger Equation'.
 
 ## Conclusion
+By predicting the wavefunction and numerically calculating the energy, the U-Net was able to outperform models that directly predict energy.
 
 ## Appendix
 
