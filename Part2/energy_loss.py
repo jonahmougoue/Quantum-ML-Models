@@ -3,7 +3,7 @@ from torch import nn
 from torch import Tensor
 
 class EnergyLoss(nn.Module):
-    def __init__(self,alpha:float=1.,gamma:float=0.,dx:float=0.15625,loss_fn:nn.Module=nn.L1Loss(reduction='mean')):
+    def __init__(self,alpha:float=1.,gamma:float=0.,dx:float=0.15625,loss_fn:nn.Module=nn.L1Loss()):
         """
         Loss function for calculating the difference in energy between true energy and energy predicted from a wavefunction\n
         Calculates energy using the time-independent schrodinger equation:\n
@@ -12,7 +12,7 @@ class EnergyLoss(nn.Module):
         :param alpha: Value that linearly scales the output of the loss
         :param gamma: Determines type of kernel used for the laplacian
         :param dx: Distance between pixels
-        :param loss_fn: Loss function used to evaluate energy differences
+        :param loss_fn: Loss function used to evaluate energy accuracy
         """
         super().__init__()
         self.alpha = alpha

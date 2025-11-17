@@ -136,7 +136,7 @@ class QuantumDataset(Dataset):
             return {'potential': self.potential[idx],
                     'wavefunction2': self.wavefunction2[idx],
                     'energy': self.energy[idx],
-                    'potential_label': self.potential_label[idx],
+                    'potential_index': self.potential_label[idx],
             }
 
         file_id, local_idx = self.index_map[idx]
@@ -153,7 +153,7 @@ class QuantumDataset(Dataset):
         return {'potential': potential,
                 'wavefunction2': wavefunction2,
                 'energy': energy,
-                'potential_label': file_id,
+                'potential_index': file_id,
         }
 
     def get_labels(self):

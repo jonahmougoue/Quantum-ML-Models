@@ -5,6 +5,7 @@ def print_img(image1:Tensor,
               image2:Tensor,
               title1:str=None,
               title2:str=None,
+              suptitle:str=None,
               energy:Tensor=None,
               potential_label:int=None,
               energy_pred:Tensor=None,
@@ -15,6 +16,7 @@ def print_img(image1:Tensor,
     :param image2: 256x256 map of potential or wavefunction
     :param title1: Title of the first image
     :param title2: Title of the second image
+    :param suptitle: Title of the entire plot
     :param energy: Energy of wavefunction
     :param potential_label: Label of potential
     :param files: List of potential files, required if potential_label is not None
@@ -50,6 +52,7 @@ def print_img(image1:Tensor,
                              +'\n'+rf'$|\Delta E| = {torch.abs(energy-energy_pred).item()*(10**3):.4e}$ mHa')
 
     ax[1].tick_params(labelbottom=False,labelleft=False)
+    fig.suptitle(suptitle)
 
     plt.show()
     plt.close(fig)
