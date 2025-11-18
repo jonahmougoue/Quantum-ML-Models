@@ -14,8 +14,8 @@ class QuantumDataset(Dataset):
         """
         Dataset containing 25,000 samples, each with:\n
         -1x256x256 potential map\n
-        -1x256x256 wavefunction^2 map\n
-        -Wavefunction energy\n
+        -1x256x256 Ground state wavefunction^2 map\n
+        -Ground state energy\n
         -Label identifying potential type\n
         Data sourced from: https://nrc-digital-repository.canada.ca/eng/view/object/?id=1343ae23-cebf-45c6-94c3-ddebdb2f23c6
         :param potentials: Name of potential to use. Options include
@@ -71,7 +71,7 @@ class QuantumDataset(Dataset):
                     tqdm.write(f'Extracted to {data_folder}\n')
 
         if potentials == 'all':
-            self.files = os.listdir(data_folder / self.sample_folder)
+            self.files = sorted(os.listdir(data_folder / self.sample_folder))
         else:
             self.files = [label_to_file[potentials]]
 

@@ -36,7 +36,7 @@ class EnergyLoss(nn.Module):
 
     def get_ke(self,wavefunction:Tensor)->Tensor:
         """
-        Calculates Kinetic Energy of the wavefunction
+        Calculates Kinetic Energy of the wavefunction using 5-point stencil approximation method
         :param wavefunction: Wavefunction Prediction
         :return: Kinetic Energy
         """
