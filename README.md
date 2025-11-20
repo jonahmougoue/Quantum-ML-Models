@@ -1,4 +1,4 @@
-# Deep Learning Methods for Solving the time-independent Schrödinger Equation
+# Deep Learning Methods for Solving the Time-Independent Schrödinger Equation
 
 
 
@@ -64,20 +64,22 @@ Part2/predict_wavefunction.ipynb
 A CNN is trained to map a potential grid to the ground-state energy.
 The architecture of this model is based off the model used in 'Deep Learning and the Schrödinger Equation'
 ### Results
-The CNN achieved a median absolute error of 1.54 mHa with R^2 of 0.9985, larger than the median absolute error of 1.49 mHa found in 'Deep Learning and the Schrödinger Equation'.
+The CNN achieved a median absolute error of 0.75 mHa with $R^2$ of 0.9992, 
+smaller than the median absolute error of 5.90 mHa found in 'Deep Learning and the Schrödinger Equation'.
 
 ## Part 2: Operator Learning
 A U-Net model is created for operator learning, mapping potential grids to ground-state wavefunctions.
 The predicted energy is then computed numerically from the wavefunction.
 A custom loss function is used to penalize error in energy as opposed to error in wavefunction.
 ### Results
-In energy prediction, the U-Net achieved a median absolute error of 0.88 mHa with R^2 = 0.9997 over 10 epochs, lower than the median absolute error of 1.49 mHa found in 'Deep Learning and the Schrödinger Equation'.
+In energy prediction, the U-Net achieved a median absolute error of 0.79 mHa with R^2 = 0.9998 over 100 epochs, 
+lower than the median absolute error of 5.90 mHa found in 'Deep Learning and the Schrödinger Equation'.
 
 ## Conclusion
-Predicting the wavefunction and computing the energy numerically proved more accurate than directly predicting the energy.
+Predicting the wavefunction and computing the energy numerically and predicting the energy both gave similar errors in energy.
 Both models perform under the threshold for chemical accuracy (1.6 mHa).
-These results indicate that learning the wavefunction and calculating the energy can outperform directly predicting the energy.
-The custom loss function for the U-Net causes the model to produce wavefunctions that produce the correct energy, and thus make wavefunctions that satisfy the Shrödinger equation.
+These results indicate that learning the wavefunction and calculating the energy can provide information on the wavefunction while maintaining model accuracy.
+This is because custom loss function for the U-Net makes the model to produce wavefunctions that produce the correct energy, and thus make wavefunctions that satisfy the Shrödinger equation.
 ## Appendix
 
 ### Units
@@ -107,7 +109,8 @@ This value is required to numerically calculate the correct energies and can var
 ## Credit
 This research project is based on the publication:
 
-Mills, Kyle, Michael Spanner, and Isaac Tamblyn. ‘Deep Learning and the Schrödinger Equation’. Physical Review A 96, no. 4 (18 October 2017). https://doi.org/10.1103/physreva.96.042113.
+Mills, Kyle, Michael Spanner, and Isaac Tamblyn. ‘Deep Learning and the Schrödinger Equation’. Physical Review A 96, no. 4 (18 October 2017). 
+https://doi.org/10.1103/physreva.96.042113.
 
 Data sourced from the National Research Council of Canada:
 https://nrc-digital-repository.canada.ca/eng/view/object/?id=1343ae23-cebf-45c6-94c3-ddebdb2f23c6
