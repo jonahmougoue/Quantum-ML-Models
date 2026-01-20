@@ -32,7 +32,9 @@ def plot_energy(E_pred:list,E_true:list,file_labels:list,potential_indices:list)
     axes[0].set_xlabel('True Energy (Ha)')
     axes[0].set_ylabel('Predicted Energy (Ha)')
     axes[0].set_title('Total Energy Accuracy')
-    plot_text = rf'$R^2 = {r2:.4f}$'+f'\nMedian Absolute Error: {np.median(np.absolute(E_true - E_pred))*10**3:.2f} mHa'
+    plot_text = (rf'$R^2 = {r2:.4f}$'+
+                 f'\nMean Absolute Error: {np.mean(np.absolute(E_true - E_pred))*10**3:.2f} mHa'+
+                 f'\nMedian Absolute Error: {np.median(np.absolute(E_true - E_pred))*10**3:.2f} mHa')
     axes[0].text(0.95,0.05,plot_text,transform=axes[0].transAxes,ha='right',va='bottom')
     axes[0].legend(loc='upper left')
 
@@ -45,7 +47,9 @@ def plot_energy(E_pred:list,E_true:list,file_labels:list,potential_indices:list)
         axes[i+1].set_xlabel('True Energy (Ha)')
         axes[i+1].set_ylabel('Predicted Energy (Ha)')
         axes[i+1].set_title(rf'{file_labels[label]} Energy Accuracy')
-        plot_text = rf'$R^2 = {r2:.4f}$'+f'\nMedian Absolute Error: {np.median(np.absolute(E_true[mask] - E_pred[mask]))*10**3:.2f} mHa'
+        plot_text = (rf'$R^2 = {r2:.4f}$'+
+                     f'\nMean Absolute Error: {np.mean(np.absolute(E_true[mask] - E_pred[mask]))*10**3:.2f} mHa'+
+                     f'\nMedian Absolute Error: {np.median(np.absolute(E_true[mask] - E_pred[mask]))*10**3:.2f} mHa')
         axes[i+1].text(0.95,0.05,plot_text,transform=axes[i+1].transAxes,ha='right',va='bottom')
         axes[i+1].legend(loc='upper left')
     plt.tight_layout()

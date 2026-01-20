@@ -64,16 +64,14 @@ Part2/predict_wavefunction.ipynb
 A CNN is trained to map a potential grid to the ground-state energy.
 The architecture of this model is based off the model used in 'Deep Learning and the Schrödinger Equation'
 ### Results
-The CNN achieved a median absolute error of 0.75 mHa with $R^2$ of 0.9992, 
-smaller than the median absolute error of 5.90 mHa found in 'Deep Learning and the Schrödinger Equation'.
+The CNN achieved a mean absolute error of 0.91 mHa with $R^2$ of 0.9995.
 
 ## Part 2: Operator Learning
 A U-Net model is created for operator learning, mapping potential grids to ground-state wavefunctions.
 The predicted energy is then computed numerically from the wavefunction.
-A custom loss function is used to penalize error in energy as opposed to error in wavefunction.
+A custom loss function is used to penalize error in the Schrödinger equation.
 ### Results
-In energy prediction, the U-Net achieved a median absolute error of 0.79 mHa with R^2 = 0.9998 over 100 epochs, 
-lower than the median absolute error of 5.90 mHa found in 'Deep Learning and the Schrödinger Equation'.
+In energy prediction, the U-Net achieved a mean absolute error of 0.91 mHa with R^2 of 0.9998 over 100 epochs.
 
 ## Conclusion
 Predicting the wavefunction and computing the energy numerically and predicting the energy both gave similar errors in energy.
@@ -92,7 +90,7 @@ Energy differences are expressed in millihartrees.
 ### Notation
 $V$: Potential
 
-$\psi$: Wavefunction
+$\psi_0$: Ground state wavefunction
 
 $E_{True}$: Energy of the wavefunction as specified in the dataset
 
